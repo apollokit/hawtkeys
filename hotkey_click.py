@@ -29,19 +29,31 @@ class KeyboardManager():
         """
         keystring = str(key).strip('\'')
 
+        # for restoring current position after clicking
+        curr_pos = pyautogui.position()
+        
         ## for kicad UI buttons
 
         ## pcbnew
         # these work on my hp monitor at home, with the pcbnew window maximized
-        
         # alt+b -> button for "show filled areas in zones"
-        if keystring == '∫':
+        if keystring == 'Ω':
             print(f'Saw {keystring} hotkey, show filled areas in zones')
             pyautogui.click(16,400)
+            pyautogui.moveTo(*curr_pos)
         # alt+n -> button for "do not show filled areas in zones"
-        elif keystring == '˜':
+        elif keystring == '≈':
             print(f'Saw {keystring} hotkey, do not show filled areas in zones')
             pyautogui.click(16,435)
+            pyautogui.moveTo(*curr_pos)
+        elif keystring == '∫':
+            print(f'Saw {keystring} hotkey, click connection type')
+            pyautogui.click(750,412)
+            pyautogui.moveTo(*curr_pos)
+        elif keystring == '˜':
+            print(f'Saw {keystring} hotkey, click okay')
+            pyautogui.click(1111,661)
+            pyautogui.moveTo(*curr_pos)
 
 if __name__ == '__main__':
 
