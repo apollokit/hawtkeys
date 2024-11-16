@@ -14,6 +14,9 @@ import pyautogui
 from pynput import keyboard
 
 WINDOW_IS_VISIBLE_AND_ACTIVE = 2
+    
+# for typing text
+kb_cntrl = keyboard.Controller()
 
 class KeyboardManager():
 
@@ -42,11 +45,14 @@ class KeyboardManager():
         # for restoring current position after clicking
         curr_pos = pyautogui.position()
 
+        # MARK: standard hotkeys
         if self.mode == 'standard':
+
             # alt+b -> move to center of screen
             if keystring == '∫':
                 print(f'Saw {keystring} hotkey, move to center of screen')
                 pyautogui.moveTo(950,500)
+
             # cmd+shift+k -> click at location (80,150)  (intended for "new chat" button in gchat)
             elif {    keyboard.Key.cmd, 
                     keyboard.Key.shift, 
@@ -67,6 +73,13 @@ class KeyboardManager():
                 else:
                     print('\tWindow is not active, do nothing')
 
+            # ctrl+alt+e -> type email address
+            elif {    keyboard.Key.ctrl, 
+                    keyboard.Key.alt,
+                    keyboard.KeyCode(char='e')}.issubset(current_keys):
+                print(f'Saw {current_keys} hotkey, type email address')
+                kb_cntrl.type('kitkennedy8@gmail.com')
+                
         ## for kicad UI buttons
         elif self.mode == 'pcbnew':
             ## pcbnew
