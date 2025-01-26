@@ -13,6 +13,9 @@ import subprocess
 import pyautogui
 from pynput import keyboard
 
+import google_tasks_functions
+from ui_lib import get_window_viz_status, get_window_position
+
 WINDOW_IS_VISIBLE_AND_ACTIVE = 2
     
 # for typing text
@@ -79,6 +82,15 @@ class KeyboardManager():
                     keyboard.KeyCode(char='e')}.issubset(current_keys):
                 print(f'Saw {current_keys} hotkey, type email address')
                 kb_cntrl.type('kitkennedy8@gmail.com')
+            
+            # MARK for google tasks app
+
+            # ctrl+alt+a -> type email address
+            elif {    keyboard.Key.ctrl, 
+                    keyboard.Key.alt,
+                    keyboard.KeyCode(char='a')}.issubset(current_keys):
+                print(f'Saw {current_keys} hotkey, archive task in Google Tasks') 
+                google_tasks_functions.archive_task()
                 
         ## for kicad UI buttons
         elif self.mode == 'pcbnew':
@@ -119,48 +131,6 @@ class KeyboardManager():
         
         self.current_keys.discard(key)
 
-def get_window_viz_status(app_name) -> int | None:
-    """Get the visibility status of the window of the given application.
-    
-    See the shell script get_app_window_viz_status.sh for more details.
-    """
-
-    # Call the shell script with the application name as an argument
-    result = subprocess.run(
-        ['./get_app_window_viz_status.sh', app_name],
-        stdout=subprocess.PIPE,  # Capture standard output
-        stderr=subprocess.PIPE,  # Capture standard error
-        text=True  # Decode output as text
-    )
-
-    # Check if the script executed successfully
-    if result.returncode == 0:
-        # Parse and return the output
-        return int(result.stdout)
-    else:
-        # Handle errors (if any)
-        print(f"Error: {result.stderr.strip()}")
-        return None
-
-def get_window_position(app_name) -> tuple[int,int,int,int] | None:
-    """Get the position of the top-left corner of the window of the given application."""
-
-    # Call the shell script with the application name as an argument
-    result = subprocess.run(
-        ['./get_app_window_coords.sh', app_name],
-        stdout=subprocess.PIPE,  # Capture standard output
-        stderr=subprocess.PIPE,  # Capture standard error
-        text=True  # Decode output as text
-    )
-
-    # Check if the script executed successfully
-    if result.returncode == 0:
-        # Parse and return the output
-        return (int(res) for res in result.stdout.strip().split(','))
-    else:
-        # Handle errors (if any)
-        print(f"Error: {result.stderr.strip()}")
-        return None
 
 @click.group() # type: ignore
 def cli():
